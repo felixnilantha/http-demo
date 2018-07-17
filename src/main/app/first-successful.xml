@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ftp="http://www.mulesoft.org/schema/mule/ee/ftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/ftp http://www.mulesoft.org/schema/mule/ee/ftp/current/mule-ftp-ee.xsd">
+    <flow name="first-successfulFlow">
+        <ftp:inbound-endpoint host="localhost" port="21" path="/Input" user="muleuser" password="test" responseTimeout="10000" doc:name="FTP"/>
+        <first-successful doc:name="First Successful">
+            <processor-chain>
+                <ftp:outbound-endpoint host="localhost" port="21" path="/nofolder" user="muleuser" password="test" responseTimeout="10000" doc:name="FTP"/>
+                <logger message="Message no folder " level="INFO" doc:name="Logger"/>
+            </processor-chain>
+            <processor-chain>
+                <ftp:outbound-endpoint host="localhost" port="21" path="/Output" user="muleuser" password="test" responseTimeout="10000" doc:name="FTP"/>
+                <logger message="Message pass to output" level="INFO" doc:name="Logger"/>
+            </processor-chain>
+            <processor-chain>
+                <ftp:outbound-endpoint host="localhost" port="21" responseTimeout="10000" doc:name="FTP"/>
+                <logger message="Message no folder " level="INFO" doc:name="Logger"/>
+            </processor-chain>
+        </first-successful>
+    </flow>
+</mule>
